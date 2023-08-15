@@ -169,7 +169,7 @@ void gpulog(int prio, int thr_id, const char *fmt, ...)
 		return;
 
 	if (gpu_threads > 1)
-		len = snprintf(pfmt, 128, "CPU T%d: Verus Hashing. %s", thr_id, fmt);
+		len = snprintf(pfmt, 128, "CPU T%d: Verus Hashing (%s).", thr_id, fmt);
 	else
 		len = snprintf(pfmt, 128, "GPU #%d: %s", dev_id, fmt);
 	pfmt[sizeof(pfmt)-1]='\0';
@@ -217,18 +217,18 @@ void format_hashrate_unit(double hashrate, char *output, const char *unit)
 {
 	char prefix[2] = { 0, 0 };
 
-	if (hashrate < 10000) {
+	if (hashrate < 1e3) {
 		// nop
 	}
-	else if (hashrate < 1e7) {
+	else if (hashrate < 1e6) {
 		prefix[0] = 'k';
 		hashrate *= 1e-3;
 	}
-	else if (hashrate < 1e10) {
+	else if (hashrate < 1e9) {
 		prefix[0] = 'M';
 		hashrate *= 1e-6;
 	}
-	else if (hashrate < 1e13) {
+	else if (hashrate < 1e12) {
 		prefix[0] = 'G';
 		hashrate *= 1e-9;
 	}

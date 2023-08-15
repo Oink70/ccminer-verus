@@ -851,7 +851,6 @@ __m128i __verusclmulwithoutreduction64alignedrepeat_port2_2(__m128i *randomsourc
 			uint64_t aesround = 0;
 			__m128i onekey;
 
-#pragma GCC unroll 8
 			for ( int count = 1; count <= 8; count++ )
 			{
 				onekey = _mm_load_si128_emu(rc++);

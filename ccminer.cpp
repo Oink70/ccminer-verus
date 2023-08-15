@@ -341,6 +341,7 @@ Options:\n\
       --no-longpoll     disable X-Long-Polling support\n\
       --no-stratum      disable X-Stratum support\n\
       --no-extranonce   disable extranonce subscribe on stratum\n\
+      --nicehash        Enable mining to NiceHash stratum\n\
   -q, --quiet           disable per-thread hashmeter output\n\
       --no-color        disable colored output\n\
   -D, --debug           enable debug output\n\
@@ -2002,9 +2003,10 @@ static void *miner_thread(void *userdata)
 				if (nicehash) {
 					// force xnsub when mining using nicehash stratum
 					opt_extranonce = true;
-				} else {
-					// disable xnsub when not using nicehash mode
-					opt_extranonce = false;
+// Do not force disabling xnsub if nicehash is false, but leave it to the current setting.
+//				} else {
+//					// disable xnsub when not using nicehash mode
+//					opt_extranonce = true;
 				}
 			}
 
@@ -3683,14 +3685,15 @@ int main(int argc, char *argv[])
 	// get opt_quiet early
 	parse_single_opt('q', argc, argv);
 
-	printf("*************************************************************\n");	
-	printf("*  ccminer CPU: " PACKAGE_VERSION " for Verushash v2.2 based on ccminer   *\n");
-	printf("*************************************************************\n");	
+	printf("**************************************************************\n");
+	printf("*  ccminer ARM: " PACKAGE_VERSION " for Verushash v2.2 based on ccminer   *\n");
+	printf("**************************************************************\n");
 
-		printf("Originally based on Christian Buchner and Christian H. project\n");
-		printf("Adapted to Verus by Monkins1010\n");
-	    printf("Goto https://wiki.verus.io/#!index.md for mining setup guides. \n");
-		printf("Git repo located at: " PACKAGE_URL " \n\n");
+	printf("Originally based on Christian Buchner and Christian H. project\n");
+	printf("Adapted to Verus by Monkins1010\n");
+	printf("Compiled and released by Oink.VRSC@\n");
+	printf("Goto https://wiki.verus.io/#!index.md for mining setup guides. \n");
+	printf("Git repo located at: " PACKAGE_URL " \n\n");
 
 	rpc_user = strdup("");
 	rpc_pass = strdup("");
