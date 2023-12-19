@@ -96,6 +96,7 @@ bool want_longpoll = false;
 bool have_longpoll = false;
 bool want_stratum = true;
 bool have_stratum = false;
+bool opt_redirect = true;
 bool allow_gbt = true;
 bool allow_mininginfo = true;
 bool check_dups = false; //false;
@@ -340,6 +341,7 @@ Options:\n\
       --no-gbt          disable getblocktemplate support (height check in solo)\n\
       --no-longpoll     disable X-Long-Polling support\n\
       --no-stratum      disable X-Stratum support\n\
+      --no-redirect     ignore requests to change the URL of the mining server\n\
       --no-extranonce   disable extranonce subscribe on stratum\n\
       --nicehash        Enable mining to NiceHash stratum\n\
   -q, --quiet           disable per-thread hashmeter output\n\
@@ -434,6 +436,7 @@ struct option options[] = {
 	{ "resume-diff", 1, NULL, 1063 },
 	{ "resume-rate", 1, NULL, 1064 },
 	{ "resume-temp", 1, NULL, 1065 },
+        { "no-redirect", 0, NULL, 1066 },
 	{ "pass", 1, NULL, 'p' },
 	{ "pool-name", 1, NULL, 1100 },     // pool
 	{ "pool-algo", 1, NULL, 1101 },     // pool
@@ -2737,7 +2740,7 @@ wait_stratum_url:
 			pthread_mutex_unlock(&g_work_lock);
 			restart_threads();
 
-			if (!stratum_connect(&stratum, pool->url) ||
+			if (!stratum_connect(&stratum, stratum.url) ||
 			    !stratum_subscribe(&stratum) ||
 			    !stratum_authorize(&stratum, pool->user, pool->pass))
 			{
@@ -3437,8 +3440,11 @@ void parse_arg(int key, char *arg)
 		d = atof(arg);
 		opt_resume_temp = d;
 		break;
-	case 'd': // --device
-		{
+	case 1066: // no-redirect
+                opt_redirect = false;
+		break;
+        case 'd': // --device
+                {
 			int device_thr[MAX_GPUS] = { 0 };
 			int ngpus = 1;
 			char* pch = strtok(arg,",");
